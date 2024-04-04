@@ -10,7 +10,7 @@ async function getFileURL(url) {
         else return null;
     } catch (error) {
         console.error('Error fetching file URL:', error);
-        return null;
+        throw new Error('Failed to fetch file URL');
     }
 }
 
