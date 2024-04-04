@@ -1,79 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medal Downloader</title>
-    <style>
-        body {
-            background-color: #333333;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-        #medal-link {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            background-color: #555555;
-            color: white;
-            border: none;
-            outline: none;
-            border-radius: 5px;
-        }
-        #upload-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #upload-button:hover {
-            background-color: #45a049;
-        }
-        #video-preview {
-            width: 100%;
-            margin-top: 20px;
-        }
-        #download-link {
-            display: none;
-            margin-top: 10px;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medal Video Downloader</title>
+<style>
+  body {
+    background-color: #333333;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #555555;
+    border-radius: 10px;
+    background-color: #444444;
+  }
+  .input-group {
+    margin-bottom: 20px;
+  }
+  .input-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .input-group button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  video {
+    width: 100%;
+    display: none; /* Hide video initially */
+  }
+</style>
 </head>
 <body>
-    <input type="text" id="medal-link" placeholder="Insert Medal link here">
-    <button id="upload-button" onclick="uploadMedal()">Upload</button>
-    <video id="video-preview" controls></video>
-    <a id="download-link" download="medal_video.mp4">Download Video</a>
+<div class="container">
+  <h1>Medal Video Downloader</h1>
+  <div class="input-group">
+    <input type="text" id="medalUrl" placeholder="Insert Medal video link here">
+    <button onclick="uploadMedal()">Upload</button>
+  </div>
+  <video id="medalVideo" controls autoplay>
+    Your browser does not support the video tag.
+  </video>
+</div>
 
-    <script>
-        async function uploadMedal() {
-            const medalLink = document.getElementById('medal-link').value;
-            try {
-                const response = await fetch('/api/download', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: medalLink })
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch. Status: ${response.status}`);
-                }
-                const videoURL = await response.text();
-                console.log('Video URL:', videoURL);
-                const videoPreview = document.getElementById('video-preview');
-                videoPreview.src = videoURL;
-                const downloadLink = document.getElementById('download-link');
-                downloadLink.href = videoURL;
-                downloadLink.style.display = 'block';
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-    </script>
+<script>
+async function uploadMedal() {
+  const medalUrl = document.getElementById('medalUrl').value;
+  const response = await fetch('YOUR_FUNCTION_ENDPOINT', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ url: medalUrl })
+  });
+  const data = await response.json();
+  if (data.valid && data.src) {
+    const videoSrc = data.src;
+    const videoElement = document.getElementById('medalVideo');
+    videoElement.src = videoSrc;
+    videoElement.style.display = 'block'; // Show video
+  } else {
+    alert('Invalid Medal video URL!');
+  }
+}
+</script>
 </body>
 </html>
