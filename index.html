@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medal Downloader</title>
+    <style>
+        body {
+            background-color: #333333;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px auto;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #666666;
+            background-color: #444444;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        video {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        a.download-btn {
+            display: none;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Medal Downloader</h1>
+    <input type="text" id="medal-link" placeholder="Insert Medal link here">
+    <br>
+    <button onclick="uploadMedal()">Upload</button>
+    <br>
+    <video controls autoplay id="video-preview"></video>
+    <br>
+    <a id="download-link" class="download-btn" download>Download Video</a>
+
+    <script>
+        async function uploadMedal() {
+            const medalLink = document.getElementById('medal-link').value;
+            try {
+                const response = await fetch('/api/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: medalLink })
+                });
+                const data = await response.json();
+                const videoPreview = document.getElementById('video-preview');
+                videoPreview.src = data.src;
+                const downloadLink = document.getElementById('download-link');
+                downloadLink.href = data.src;
+                downloadLink.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
