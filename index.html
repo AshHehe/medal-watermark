@@ -9,53 +9,45 @@
             background-color: #333333;
             color: white;
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px auto;
         }
-        input[type="text"] {
-            width: 300px;
+        #medal-link {
+            width: 100%;
             padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            font-size: 16px;
+            background-color: #555555;
+            color: white;
+            border: none;
+            outline: none;
             border-radius: 5px;
-            color: #666666;
-            background-color: #444444;
         }
-        button {
-            padding: 10px 20px;
+        #upload-button {
             background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            color: white;
-            font-size: 16px;
             cursor: pointer;
         }
-        video {
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 20px;
+        #upload-button:hover {
+            background-color: #45a049;
         }
-        a.download-btn {
+        #video-preview {
+            width: 100%;
+            margin-top: 20px;
+        }
+        #download-link {
             display: none;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-            text-decoration: none;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Medal Downloader</h1>
     <input type="text" id="medal-link" placeholder="Insert Medal link here">
-    <br>
-    <button onclick="uploadMedal()">Upload</button>
-    <br>
-    <video controls autoplay id="video-preview"></video>
-    <br>
-    <a id="download-link" class="download-btn" download>Download Video</a>
+    <button id="upload-button" onclick="uploadMedal()">Upload</button>
+    <video id="video-preview" controls></video>
+    <a id="download-link" download="medal_video.mp4">Download Video</a>
 
     <script>
         async function uploadMedal() {
@@ -68,11 +60,15 @@
                     },
                     body: JSON.stringify({ url: medalLink })
                 });
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch. Status: ${response.status}`);
+                }
+                const videoURL = await response.text();
+                console.log('Video URL:', videoURL);
                 const videoPreview = document.getElementById('video-preview');
-                videoPreview.src = data.src;
+                videoPreview.src = videoURL;
                 const downloadLink = document.getElementById('download-link');
-                downloadLink.href = data.src;
+                downloadLink.href = videoURL;
                 downloadLink.style.display = 'block';
             } catch (error) {
                 console.error('Error:', error);
