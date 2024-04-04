@@ -1,6 +1,6 @@
 async function uploadMedal() {
   const medalUrl = document.getElementById('medalUrl').value;
-  const response = await fetch('https://medal-watermark.vercel.app/api/download', {
+  const response = await fetch('https://medal-watermark.vercel.app', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
